@@ -51,7 +51,9 @@ class Neuron : public Module {
 
     vector<Value*> parameters() override {
         vector<Value*> params;
-        params.insert(params.end(), this->w.begin(), this->w.end());
+        for (Value& w: this->w) {
+            params.push_back(&w);
+        }
         params.push_back(&(this->b));
         return params;
     }
@@ -64,7 +66,7 @@ class Neuron : public Module {
         }
 
         double sum = 0;
-        for (int i = 0; i < x.size(); i++) {
+        for (size_t i = 0; i < x.size(); i++) {
             sum += x[i].data * this->w[i].data;
         }
 
@@ -130,7 +132,7 @@ class MLP : Module {
 
     MLP(): layers({}) {};
 
-    MLP(int nin, vector<int>& nouts) {
+    MLP(int nin, vector<int> nouts) {
         vector<int> sz;
         sz.push_back(nin);
         sz.insert(sz.end(), nouts.begin(), nouts.end());
